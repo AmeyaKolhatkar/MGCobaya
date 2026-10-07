@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below, and also cite the MGCAMB papers."
+title: "MGCobaya with the f(Q) sqrt(QQ0) coupling"
+version: fQ-sqrtQ-v1
+doi: 10.5281/zenodo.23202672
+authors:
+  - family-names: Kolhatkar
+    given-names: Ameya
+repository-code: "https://github.com/AmeyaKolhatkar/MGCobaya"
+license: Other

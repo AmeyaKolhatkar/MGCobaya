@@ -1,5 +1,10 @@
 MGCobaya
 ===========
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23202672.svg)](https://doi.org/10.5281/zenodo.23202672)
+
+**Fork of [sfu-cosmo/MGCobaya](https://github.com/sfu-cosmo/MGCobaya) adding the f(Q) √(QQ₀) coupling (`musigma_par = 3`) to MGCAMB.** Archived release: `fQ-sqrtQ-v1`. Please cite the DOI above.
+
+
 ## Modified Growth with Cobaya 
 This is the official repository for the latest [MGCAMB](https://github.com/sfu-cosmo/MGCAMB) package to work with Cobaya. Specifically, it is an independent package of MGCAMB, and the Cobaya source along with other cosmological codes and data should be installed separately following the instructions on the [official Cobaya website](https://cobaya.readthedocs.io/en/latest/installation_cosmo.html).
 

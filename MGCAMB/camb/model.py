@@ -261,6 +261,7 @@ class CAMBparams(F2003Class):
         ("musigma_par", c_int, "musigma_par"),
         ("mu0", c_double, "mu0"),
         ("sigma0", c_double, "sigma0"),
+        ("lambda0", c_double, "lambda0"),
         ("QR_par", c_int, "QR_par"),
         ("MGQfix", c_double, "MGQfix"),
         ("MGRfix", c_double, "MGRfix"),
@@ -611,7 +612,7 @@ class CAMBparams(F2003Class):
 #MGCAMB MOD START
     def set_mgparams(self, MG_wrapped = True, MG_flag= 0, GRtrans =  0.001, pure_MG_flag = 1, alt_MG_flag = 1, QSA_flag = 1, CDM_flag = 1,
 						muSigma_flag = 1, mugamma_par = 1, B1 = 1.333, lambda1_2  = 1000, B2 = 0.5, lambda2_2 = 1000, ss = 4, E11 = 1.0, E22 = 1.0,
-						ga = 0.5, nn = 2, musigma_par = 1, mu0 =0.0, sigma0 = 0, QR_par = 1, MGQfix = 1, MGRfix = 1, Qnot = 1.0,
+						ga = 0.5, nn = 2, musigma_par = 1, mu0 =0.0, sigma0 = 0, lambda0 = 0, QR_par = 1, MGQfix = 1, MGRfix = 1, Qnot = 1.0,
 						Rnot= 1.0, sss = 0, Linder_gamma = 0.545, B0 = 0.001, beta_star = 1.0, a_star = 0.5, xi_star = 0.001,
 						beta0 = 0.0, xi0 = 0.0001, DilS = 0.24, DilR = 1.0, F_R0 = 0.0001, FRn = 1.0, 
 						DE_model = 0, w0DE = -1.0, waDE = 0.0, MGDE_pert = False, MGCAMB_Mu_idx_1 = 1.0, MGCAMB_Mu_idx_2 = 1.0, 
@@ -659,6 +660,7 @@ class CAMBparams(F2003Class):
         self.FRn = FRn
         self.mu0 = mu0
         self.sigma0 = sigma0
+        self.lambda0 = lambda0
         self.ga = ga
         self.nn = nn
         self.w0DE = w0DE    

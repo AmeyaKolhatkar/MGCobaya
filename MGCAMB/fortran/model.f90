@@ -211,6 +211,7 @@
 		integer :: musigma_par = 1
         real(dl):: mu0 = 0.d0
 		real(dl):: sigma0 = 0.d0
+        real(dl):: lambda0 = 0.d0
         integer :: QR_par = 1
         real(dl):: MGQfix = 1
         real(dl):: MGRfix = 1

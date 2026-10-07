@@ -60,6 +60,8 @@ module MGCAMB
     real(dl) :: mu0
     real(dl) :: sigma0
 
+    ! fQ_LCDM
+    real(dl):: lambda0
 
     ! effective Newton's constant  !! not sure
     real(dl) :: ga
@@ -719,6 +721,8 @@ contains
 
         real(dl) :: omegaDE_t
 
+        real(dl) :: E_fQLCDM
+
         ! beta, m parametrization
         real(dl) :: beta, m
 
@@ -763,6 +767,13 @@ contains
 
                 else if ( muSigma_par == 2 ) then
                     MGCAMB_Mu = 1._dl
+
+                else if ( muSigma_par == 3 ) then ! f(Q) LCDM
+
+                    ! f(Q) = Q + (1-\Omega_0) Q_0 + \lambda_0\sqrt{QQ_0}
+                    ! QSA: MGCAMB_Mu = 1 / f_Q, f_Q = 1 + (lambda0/2)*sqrt(Q0/Q) = 1 + (lambda0/2)/E
+                    E_fQLCDM = mg_cache%adotoa / ( a * mg_par_cache%h0_Mpc )
+                    MGCAMB_Mu = 1._dl / ( 1._dl + 0.5_dl * lambda0/E_fQLCDM )
 
                 end if
 
@@ -855,6 +866,13 @@ contains
                     else if ( muSigma_par == 2 ) then
                         MGCAMB_Mu = 1._dl
 
+                    else if ( muSigma_par == 3 ) then ! f(Q) LCDM
+
+                        ! f(Q) = Q + (1-\Omega_0) Q_0 + \lambda_0\sqrt{QQ_0}
+                        ! QSA: MGCAMB_Mu = 1 / f_Q, f_Q = 1 + (lambda0/2)*sqrt(Q0/Q) = 1 + (lambda0/2)/E
+                        E_fQLCDM = mg_cache%adotoa / ( a * mg_par_cache%h0_Mpc )
+                        MGCAMB_Mu = 1._dl / ( 1._dl + 0.5_dl * lambda0/E_fQLCDM )
+
                     end if
 
                 end if
@@ -941,6 +959,9 @@ contains
 
         real(dl) :: omegaDEdot
 
+        ! fQ_LCDM
+        real(dl) :: E_fQLCDM, Edot_fQLCDM, mu_fQLCDM
+
         !> pure MG models
         if ( MG_flag == 1 .and. pure_MG_flag /= 3 ) then
 
@@ -983,6 +1004,12 @@ contains
 
                 else if ( muSigma_par == 2 ) then
                     MGCAMB_Mudot = 0._dl
+
+                else if ( muSigma_par == 3 ) then   ! f(Q)
+                    E_fQLCDM    = mg_cache%adotoa / ( a * mg_par_cache%h0_Mpc )
+                    Edot_fQLCDM = ( mg_cache%Hdot - mg_cache%adotoa**2 ) / ( a * mg_par_cache%h0_Mpc )
+                    mu_fQLCDM   = 1._dl / ( 1._dl + 0.5_dl*lambda0/E_fQLCDM )
+                    MGCAMB_Mudot = 0.5_dl*lambda0 * mu_fQLCDM**2 * Edot_fQLCDM / E_fQLCDM**2
 
                 end if
 
@@ -1087,6 +1114,12 @@ contains
 
                     else if ( muSigma_par == 2 ) then
                         MGCAMB_Mudot = 0._dl
+
+                    else if ( muSigma_par == 3 ) then   ! f(Q)
+                        E_fQLCDM    = mg_cache%adotoa / ( a * mg_par_cache%h0_Mpc )
+                        Edot_fQLCDM = ( mg_cache%Hdot - mg_cache%adotoa**2 ) / ( a * mg_par_cache%h0_Mpc )
+                        mu_fQLCDM   = 1._dl / ( 1._dl + 0.5_dl*lambda0/E_fQLCDM )
+                        MGCAMB_Mudot = 0.5_dl*lambda0 * mu_fQLCDM**2 * Edot_fQLCDM / E_fQLCDM**2
 
                     end if
 
@@ -1212,6 +1245,9 @@ contains
                 else if ( muSigma_par == 2 ) then
                     MGCAMB_Gamma = 1._dl
 
+                else if ( muSigma_par == 3 ) then   ! f(Q): no anisotropic stress => Sigma = mu
+                    MGCAMB_Gamma = 1._dl
+
                 end if
 
             end if
@@ -1289,6 +1325,9 @@ contains
                         MGCAMB_Gamma = 2._dl * sigma_t / mu_t - 1._dl
 
                     else if ( muSigma_par == 2 ) then
+                        MGCAMB_Gamma = 1._dl
+
+                    else if ( muSigma_par == 3 ) then   ! f(Q): no anisotropic stress => Sigma = mu
                         MGCAMB_Gamma = 1._dl
 
                     end if
@@ -1412,6 +1451,9 @@ contains
                 else if ( muSigma_par == 2 ) then
                     MGCAMB_Gammadot = 0._dl
 
+                else if ( muSigma_par == 3 ) then
+                    MGCAMB_Gammadot = 0._dl
+
                 end if
 
             end if
@@ -1499,6 +1541,9 @@ contains
                     MGCAMB_Gammadot = 2._dl * sigmadot_t / mu_t - 2._dl *sigma_t*mudot_t/mu_t**2
 
                     else if ( muSigma_par == 2 ) then
+                        MGCAMB_Gammadot = 0._dl
+
+                    else if ( muSigma_par == 3 ) then
                         MGCAMB_Gammadot = 0._dl
 
                     end if
@@ -2063,6 +2108,9 @@ contains
         mu0 = CP%mu0
         sigma0 = CP%sigma0
 
+        ! fQ_LCDM
+        lambda0 = CP%lambda0
+
         ! effective Newton's constant 
         ga = CP%ga
         nn = CP%nn
@@ -2291,6 +2339,10 @@ contains
                     else if ( muSigma_par == 2 ) then
                         write(*,*) 'write you own mu-sigma parametrization in mgcamb.f90'
                         stop
+                    else if ( muSigma_par == 3 ) then 
+                        write(*,*) '        fQ LCDM'
+                        lambda0 = Ini%Read_Double('lambda0', 0._dl)
+                        write(*,*) 'lambda0:', lambda0
                     else
                         write(*,*) 'Please choose a model in params_MG.ini'
                         stop
@@ -2516,6 +2568,10 @@ contains
                         else if ( muSigma_par == 2 ) then
                             write(*,*) 'write you own mu-sigma parametrization in mgcamb.f90'
                             stop
+                        else if ( muSigma_par == 3 ) then 
+                            write(*,*) '        fQ LCDM'
+                            lambda0 = Ini%Read_Double('lambda0', 0._dl)
+                            write(*,*) 'lambda0:', lambda0
                         else
                             write(*,*) 'Please choose a model in params_MG.ini'
                             stop
